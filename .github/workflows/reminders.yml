@@ -1,0 +1,31 @@
+# Triggers the reminder job on the production deployment every 5 minutes.
+# (Vercel Cron on the Hobby plan only runs once a day, so GitHub Actions does the scheduling.)
+# GitHub runs scheduled workflows on a best-effort basis — a few minutes' delay is normal and harmless:
+# any reminder that's due goes out on the next run.
+#
+# Repo settings → Secrets and variables → Actions:
+#   secret   CRON_SECRET  same value as CRON_SECRET in Vercel (Production)
+#   variable APP_URL      e.g. https://pandafit.vercel.app
+name: Reminders
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: reminders
+  cancel-in-progress: false
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    if: ${{ vars.APP_URL != '' }}
+    steps:
+      - run: curl -fsS --max-time 180 -X POST -H "Authorization: Bearer $CRON_SECRET" "$APP_URL/api/cron/reminders"
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+          APP_URL: ${{ vars.APP_URL }}

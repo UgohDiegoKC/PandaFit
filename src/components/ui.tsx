@@ -42,10 +42,6 @@ export function Stat({ label, value, sub }: { label: string; value: ReactNode; s
   );
 }
 
-export function StatStrip({ children }: { children: ReactNode }) {
-  return <div className="card grid grid-flow-col auto-cols-fr divide-x divide-line">{children}</div>;
-}
-
 /** Circular progress ring with a centred label (Workouts tile reference). */
 export function Ring({ value, max, label, size = 52 }: { value: number; max: number; label: ReactNode; size?: number }) {
   const r = size / 2 - 3;

@@ -4,7 +4,7 @@ import { db } from "@/db";
 
 export const dynamic = "force-dynamic";
 
-/** Liveness/readiness probe for Kubernetes. */
+/** Health check (database reachable). Used by the e2e test server and uptime monitors. */
 export async function GET() {
   try {
     await db.run(sql`select 1`);

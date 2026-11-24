@@ -14,10 +14,15 @@ function authorised(req: Request) {
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-/** POST /api/cron/reminders — called every 5 minutes by the Kubernetes CronJob. */
+/**
+ * POST /api/cron/reminders — called every 5 minutes by .github/workflows/reminders.yml.
+ * GET does the same so Vercel Cron (which sends GET with `Authorization: Bearer $CRON_SECRET`) can call it too.
+ */
 export async function POST(req: Request) {
   if (!authorised(req)) return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   const summary = await runReminderJob();
   console.info("[reminders]", JSON.stringify(summary));
   return NextResponse.json(summary);
 }
+
+export const GET = POST;
