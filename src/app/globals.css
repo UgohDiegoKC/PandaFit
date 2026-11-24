@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/*
+ * PandaFit design tokens.
+ * Dark-first (matches the reference UIs), with a full light theme.
+ * Theme is driven by <html data-theme="dark|light">, set before paint by
+ * the inline script in layout.tsx so there is no flash on load.
+ */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root,
+[data-theme="dark"] {
+  --bg: #0a0a0a;
+  --surface: #151515;
+  --surface-2: #1e1e1e;
+  --surface-3: #282828;
+  --border: rgb(255 255 255 / 0.08);
+  --border-strong: rgb(255 255 255 / 0.16);
+  --text: #f5f5f4;
+  --muted: #8b8b89;
+  --accent: #ffd60a;          /* PandaFit yellow */
+  --accent-hover: #ffe14d;
+  --accent-ink: #ffd60a;      /* yellow used as text/icon on --bg */
+  --on-accent: #111111;       /* text placed ON yellow */
+  --accent-soft: rgb(255 214 10 / 0.14);
+  --accent-faint: rgb(255 214 10 / 0.07);
+  --danger: #ff5a52;
+  --success: #3ddc84;
+  --ghost-number: rgb(255 255 255 / 0.05);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f6f5f1;
+  --surface: #ffffff;
+  --surface-2: #f0efea;
+  --surface-3: #e6e4dd;
+  --border: rgb(0 0 0 / 0.08);
+  --border-strong: rgb(0 0 0 / 0.16);
+  --text: #111111;
+  --muted: #64645f;
+  --accent: #ffd60a;
+  --accent-hover: #f5c800;
+  --accent-ink: #7a5f00;      /* darkened so yellow-as-text passes WCAG AA on light bg */
+  --on-accent: #111111;
+  --accent-soft: rgb(255 214 10 / 0.28);
+  --accent-faint: rgb(255 214 10 / 0.14);
+  --danger: #c62828;
+  --success: #1b8a4b;
+  --ghost-number: rgb(0 0 0 / 0.05);
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--border);
+  --color-line-strong: var(--border-strong);
+  --color-fg: var(--text);
+  --color-muted: var(--muted);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-ink: var(--accent-ink);
+  --color-on-accent: var(--on-accent);
+  --color-accent-soft: var(--accent-soft);
+  --color-accent-faint: var(--accent-faint);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-ghost: var(--ghost-number);
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --radius-card: 1.25rem;
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+*:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 0.5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Reusable primitives (Tailwind v4 @utility so they compose with variants and each other) */
+@utility card {
+  @apply rounded-[var(--radius-card)] border border-line bg-surface;
+}
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition disabled:cursor-not-allowed disabled:opacity-50;
+}
+@utility btn-primary {
+  @apply btn bg-accent text-on-accent hover:bg-accent-hover;
+}
+@utility btn-secondary {
+  @apply btn border border-line-strong bg-surface-2 text-fg hover:bg-surface-3;
+}
+@utility btn-ghost {
+  @apply btn text-muted hover:text-fg;
+}
+@utility input {
+  @apply w-full rounded-xl border border-line bg-surface-2 px-4 py-3 text-fg placeholder:text-muted focus:border-accent focus:outline-none;
+}
+@utility label {
+  @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-muted;
+}
+@utility chip {
+  @apply rounded-xl bg-surface-2 px-3 py-3 text-center text-sm font-medium text-muted transition hover:text-fg;
+  &[data-active="true"] {
+    @apply bg-accent text-on-accent;
+  }
+}
+@utility eyebrow {
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-muted;
+}
+
+@keyframes pulse-bar {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(250%); }
+}
+.progress-indeterminate {
+  animation: pulse-bar 1.4s ease-in-out infinite;
+}

@@ -1,0 +1,59 @@
+{
+  "name": "pandafit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "PandaFit — AI-powered fitness app (Phase 1: web app + shared backend API)",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "db:push": "drizzle-kit push",
+    "db:generate": "drizzle-kit generate",
+    "db:seed": "tsx --conditions=react-server scripts/seed.ts",
+    "setup": "npm run db:push && npm run db:seed",
+    "vapid": "tsx scripts/vapid.ts",
+    "jobs:reminders": "tsx --env-file-if-exists=.env.local --conditions=react-server scripts/run-reminders.ts",
+    "test:e2e": "playwright test",
+    "eval:plans": "tsx --env-file-if-exists=.env.local scripts/eval-plans.ts",
+    "figures:sheet": "tsx scripts/figure-sheet.tsx"
+  },
+  "engines": {
+    "node": ">=20.9"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.13.0",
+    "@libsql/client": "^0.18.0",
+    "bcryptjs": "^3.0.3",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.45.4",
+    "jose": "^6.2.18",
+    "lucide-react": "^1.78.0",
+    "next": "^16.4.6",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "server-only": "^0.0.1",
+    "web-push": "^4.0.0",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.1",
+    "@tailwindcss/postcss": "^4.3.5",
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^26.6.6",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@types/web-push": "^3.6.4",
+    "drizzle-kit": "^0.31.11",
+    "eslint": "^9.39.5",
+    "eslint-config-next": "^16.4.6",
+    "postcss": "^8.5.33",
+    "tailwindcss": "^4.3.5",
+    "tsx": "^4.23.15",
+    "typescript": "^6.0.3",
+    "vitest": "^5.1.1"
+  }
+}
