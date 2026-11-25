@@ -25,7 +25,9 @@ jobs:
     timeout-minutes: 4
     if: ${{ vars.APP_URL != '' }}
     steps:
-      - run: curl -fsS --max-time 180 -X POST -H "Authorization: Bearer $CRON_SECRET" "$APP_URL/api/cron/reminders"
+      - name: Call the reminder endpoint
+        run: |
+          curl -fsS --max-time 180 -X POST -H "Authorization: Bearer $CRON_SECRET" "$APP_URL/api/cron/reminders"
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
           APP_URL: ${{ vars.APP_URL }}
