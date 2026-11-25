@@ -3,6 +3,7 @@ import { and, eq, inArray, isNotNull, lt, lte } from "drizzle-orm";
 import { db, schema } from "@/db";
 import { track } from "../analytics";
 import { sendEmail } from "../email";
+import { appUrl } from "../app-url";
 import { deferPastQuietHours } from "../tz";
 import { desiredReminders, type PlannerPrefs } from "./planner";
 import { pushConfigured, sendPush } from "./push";
@@ -11,7 +12,6 @@ type Prefs = typeof schema.notificationPrefs.$inferSelect;
 type Notification = typeof schema.notifications.$inferSelect;
 
 export const MAX_ATTEMPTS = 3;
-const appUrl = () => process.env.APP_URL || "http://localhost:3000";
 
 export async function getPrefs(userId: string): Promise<Prefs> {
   const row = await db.query.notificationPrefs.findFirst({ where: eq(schema.notificationPrefs.userId, userId) });

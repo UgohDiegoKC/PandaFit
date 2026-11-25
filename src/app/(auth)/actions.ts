@@ -6,6 +6,7 @@ import { and, eq, gt, isNull } from "drizzle-orm";
 import { z } from "zod";
 import { db, schema } from "@/db";
 import { track } from "@/lib/analytics";
+import { appUrl } from "@/lib/app-url";
 import { emailProvider, sendEmail } from "@/lib/email";
 import { endSession, hashPassword, startSession, verifyPassword } from "@/lib/auth";
 
@@ -69,7 +70,7 @@ export async function requestPasswordReset(_: FormState, form: FormData): Promis
 
   const token = randomBytes(32).toString("base64url");
   await db.insert(schema.passwordResetTokens).values({ tokenHash: sha256(token), userId: user.id, expiresAt: new Date(Date.now() + 3600_000) });
-  const link = `${process.env.APP_URL ?? "http://localhost:3000"}/reset-password?token=${token}`;
+  const link = `${appUrl()}/reset-password?token=${token}`;
 
   await sendEmail({
     to: user.email,

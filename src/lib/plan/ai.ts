@@ -1,6 +1,6 @@
 /**
  * Server-side AI plan generation. Model credentials never leave the server.
- * The model must answer through a forced tool call whose input is validated with zod,
+ * The model must answer through a tool call whose input is validated with zod,
  * restricted to catalog exercise slugs, then passed through applySafety().
  */
 import Anthropic from "@anthropic-ai/sdk";
@@ -112,10 +112,14 @@ export async function generateAiPlan(input: PlannerInput): Promise<AiResult> {
   try {
     const res = await client.messages.create({
       model,
-      max_tokens: 4000,
+      max_tokens: 8000,
       system: SYSTEM,
       tools: [TOOL],
-      tool_choice: { type: "tool", name: TOOL.name },
+      // Claude Sonnet 5.5 rejects forced tool_choice ("tool"/"any") with a 400, so use "auto";
+      // the prompt asks for the tool call, and a missing call falls back to the template plan.
+      tool_choice: { type: "auto" },
+      // Thinking is on by default on Sonnet 5.5; turn it off to stay within the request timeout.
+      thinking: { type: "between_tools" },
       messages: [{ role: "user", content: userPrompt(input) }],
     });
     const latencyMs = Date.now() - started;
