@@ -90,8 +90,9 @@ Vercel hosts the app; Turso hosts the database.
 2. **Schema.** Apply it to each database:
    `DATABASE_URL=libsql://… DATABASE_AUTH_TOKEN=… npm run db:push` (and again after schema changes; switch to `db:generate` migrations once you have real users).
 3. **Vercel project.** Import the GitHub repo at vercel.com/new (framework: Next.js, defaults are fine). Under Settings → Environment Variables, add these for **Production**, using the `pandafit` database:
-   `AUTH_SECRET`, `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `ANTHROPIC_API_KEY`, `AI_MODEL`, `APP_URL`, `CRON_SECRET`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `EMAIL_PROVIDER`, `EMAIL_FROM`, plus `RESEND_API_KEY` or `SENDGRID_API_KEY` once you pick a provider.
+   `AUTH_SECRET`, `DATABASE_URL`, `DATABASE_AUTH_TOKEN`, `ANTHROPIC_API_KEY`, `AI_MODEL`, `CRON_SECRET`, `VAPID_PUBLIC_KEY`, `VAPID_PRIVATE_KEY`, `VAPID_SUBJECT`, `EMAIL_PROVIDER`, `EMAIL_FROM`, plus `RESEND_API_KEY` or `SENDGRID_API_KEY` once you pick a provider.
    Add the same set for **Preview**, but point `DATABASE_URL`/`DATABASE_AUTH_TOKEN` at `pandafit-preview` and use a different `AUTH_SECRET`.
+   `APP_URL` (the base of links in emails) is optional on Vercel: production uses the project's production domain and each preview uses its own branch URL. Set it only once you add a custom domain.
 4. **Reminders.** In GitHub → Settings → Secrets and variables → Actions, add the secret `CRON_SECRET` (same value as in Vercel Production) and the variable `APP_URL` (your production URL). `.github/workflows/reminders.yml` then calls the job every 5 minutes. On Vercel Pro you can use Vercel Cron instead; the endpoint also accepts GET.
 
 After that, every push to `main` deploys to production, and every pull request gets its own preview URL using the preview database. Roll back from the Vercel dashboard (Deployments → Promote to Production on an earlier build).
